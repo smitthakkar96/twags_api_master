@@ -41,7 +41,7 @@ def getposts():
          interests = u.interests
          break
     dict = []
-    _tweets = tweets.objects(tag__in=interests)
+    _tweets = tweets.objects[:100](tag__in=interests)
     for t in _tweets:
         temp={}
         for key in t:
@@ -116,3 +116,4 @@ def searchtweetbyimage():
 
 port = int(os.environ.get('PORT', 5000))
 app.run(host="0.0.0.0",debug=True,port=port)
+# /home/ubuntu/twags_api_master
