@@ -114,5 +114,5 @@ def searchtweetbyimage():
         dict.append(temp)
     return json.dumps(dict)
 
-
-app.run(host="0.0.0.0",debug=True)
+port = int(os.environ.get('PORT', 5000))
+app.run(host="0.0.0.0",debug=True,port=port)
