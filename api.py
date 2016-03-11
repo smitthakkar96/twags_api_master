@@ -17,6 +17,10 @@ clarifai_api = ClarifaiApi("-ZFtoURc4GYEORZtUFCacKQ82SrRRV4_IRVn59QL","Gta5B-hl7
 @app.route('/signup',methods=['POST'])
 def signup():
     if request.json["name"] is not None and request.json["email"] is not None and request.json["interests"] is not None:
+        _email = request.json["email"]
+        usr = user.objects(email=_email)
+        if len(usr) > 0:
+            return str(usr[0].id)
         interest_list = request.json["interests"]
         for i in interest_list:
             try:
