@@ -88,13 +88,25 @@ def getSentiments():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
-    dict=[]
+    dict={}
+    positive = 0
+    negetive = 0
+    neutral = 0
     for t in tweepy.Cursor(api.search,q=keyword).items(50):
         tweet = unicodedata.normalize('NFKD', t.text.lower()).encode('ascii','ignore')
         _sentiments = sentiments.getSentiments(tweet)
         _sentiments = json.loads(_sentiments)
+        positive += float(_sentiments["probability"]["pos"])
+        negetive += float(_sentiments["probability"]["neg"])
+        neutral += float(_sentiments["probability"]["neutral"])
+        print negetive
         print _sentiments
-        dict.append(_sentiments)
+    positive = float(positive)/50
+    negetive = float(negetive)/50
+    neutral = float(neutral)/50
+    dict["pos"] = str(positive)
+    dict["neg"] = str(negetive)
+    dict["neutral"] = str(neutral)
     return json.dumps(dict)
 
 @app.route('/searchtweetbyimage',methods=['POST'])
