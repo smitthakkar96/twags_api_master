@@ -16,12 +16,12 @@ clarifai_api = ClarifaiApi("-ZFtoURc4GYEORZtUFCacKQ82SrRRV4_IRVn59QL","Gta5B-hl7
 
 @app.route('/signup',methods=['POST'])
 def signup():
-    if request.json["name"] is not None and request.json["email"] is not None and request.json["interests"] is not None:
-        _email = request.json["email"]
+    if request.args["name"] is not None and request.args["email"] is not None and request.args["interests"] is not None:
+        _email = request.args["email"]
         usr = user.objects(email=_email)
         if len(usr) > 0:
             return str(usr[0].id)
-        interest_list = request.json["interests"]
+        interest_list = request.args["interests"]
         for i in interest_list:
             try:
                 g = globalInterests()
@@ -30,9 +30,9 @@ def signup():
             except Exception as e:
                 print "already exits"
         u  = user()
-        u.name = request.json["name"]
-        u.email = request.json["email"]
-        u.interests = request.json["interests"]
+        u.name = request.args["name"]
+        u.email = request.args["email"]
+        u.interests = request.args["interests"]
         u.save()
         return str(u.id)
     else:
