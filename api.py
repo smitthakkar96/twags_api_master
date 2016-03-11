@@ -6,9 +6,11 @@ import tweepy
 import sentiments
 from clarifai.client import ClarifaiApi
 import os
-
+from flask.ext.cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+
 clarifai_api = ClarifaiApi("-ZFtoURc4GYEORZtUFCacKQ82SrRRV4_IRVn59QL","Gta5B-hl7cjg0FQm6NnJaF7GGOUuHDOoArJJxJNU")
 
 
