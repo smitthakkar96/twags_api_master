@@ -3,8 +3,14 @@ from documents import *
 import unicodedata
 from settings import *
 import tweepy
+import sentiments
+from clarifai.client import ClarifaiApi
+import os
+
 
 app = Flask(__name__)
+clarifai_api = ClarifaiApi("-ZFtoURc4GYEORZtUFCacKQ82SrRRV4_IRVn59QL","Gta5B-hl7cjg0FQm6NnJaF7GGOUuHDOoArJJxJNU")
+
 
 @app.route('/signup',methods=['POST'])
 def signup():
@@ -69,5 +75,44 @@ def byGeo():
         temp["createdAt"] = createdAt
         dict.append(temp)
     return json.dumps(dict)
+
+@app.route('/getSentiments')
+def getSentiments():
+    keyword = request.args.get('keyword')
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth)
+    dict=[]
+    for t in tweepy.Cursor(api.search,q=keyword).items(50):
+        tweet = unicodedata.normalize('NFKD', t.text.lower()).encode('ascii','ignore')
+        _sentiments = sentiments.getSentiments(tweet)
+        _sentiments = json.loads(_sentiments)
+        print _sentiments
+        dict.append(_sentiments)
+    return json.dumps(dict)
+
+@app.route('/searchtweetbyimage',methods=['POST'])
+def searchtweetbyimage():
+    file = request.files['file']
+    result = clarifai_api.tag_images(file)
+    tags = result["results"][0]["result"]["tag"]["classes"]
+    print tags
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth)
+    dict=[]
+    for t in tweepy.Cursor(api.search,q=str(tags[2])).items(20):
+        temp = {}
+        text = unicodedata.normalize('NFKD', t.text.lower()).encode('ascii','ignore')
+        name = t.user.name
+        profilepicture_url = t.user.profile_image_url
+        createdAt = t.created_at
+        temp["text"] = text
+        temp["by_name"] = name
+        temp["by_profilepicture"] = profilepicture_url
+        temp["createdAt"] = createdAt
+        dict.append(temp)
+    return json.dumps(dict)
+
 
 app.run(host="0.0.0.0",debug=True)

@@ -1,36 +1,3 @@
-# # import sched, time
-# # import connect
-# # from settings import *
-# # from documents import *
-# # import sentiments
-# # import tweepy
-#
-# auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-# auth.set_access_token(access_token, access_token_secret)
-#
-# api = tweepy.API(auth)
-#
-# s = sched.scheduler(time.time,time.sleep)
-# max_id = None
-#
-# def fillmymongo():
-#     try:
-#             print "started"
-#             interests = globalInterests.objects()
-#             for i in interests:
-#                 print "fetching " + i.text
-#                 for page in tweepy.Cursor(api.search, q=i.text,max_id=i.max_id).pages(2):
-#                     for item in page:
-#                         print item.text
-#                         print item.id
-#                         max_id = item.id
-#                 i.max_id = str(max_id)
-#                 i.save()
-#     except:
-#         print "error"
-#     s.enter(1,1,fillmymongo,())
-#     s.run()
-# fillmymongo()
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
 from tweepy import Stream
