@@ -13,7 +13,9 @@ for i in interests:
     print i.text
     allinterests.append(str(i.text))
 
+
 class StdOutListener(StreamListener):
+
     def on_data(self, data):
         try:
             d = json.loads(data)
@@ -44,11 +46,13 @@ class StdOutListener(StreamListener):
 
 if __name__ == '__main__':
 
-    #This handles Twitter authetification and the connection to Twitter Streaming API
+    # This handles Twitter authetification and the connection to Twitter
+    # Streaming API
     l = StdOutListener()
     auth = OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     stream = Stream(auth, l)
     print allinterests
-    #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
+    # This line filter Twitter Streams to capture data by the keywords:
+    # 'python', 'javascript', 'ruby'
     stream.filter(track=allinterests)
